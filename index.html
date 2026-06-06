@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+<link id="favicon" rel="icon">
+
 <title>socialgrave</title>
 
 <style>
@@ -11,23 +13,33 @@ body {
   margin: 0;
   background: black;
   color: white;
+
   font-family: monospace;
+
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
-  text-align: center;
   overflow: hidden;
+  text-align: center;
 }
 
 #text {
-  font-size: clamp(22px, 4vw, 48px);
+  font-size: clamp(24px, 4vw, 56px);
   max-width: 90%;
   letter-spacing: 1px;
   white-space: pre-wrap;
 }
-</style>
 
+.cursor {
+  display: inline-block;
+  animation: blink 0.8s infinite;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+</style>
 </head>
 
 <body>
@@ -35,32 +47,78 @@ body {
 <div id="text"></div>
 
 <script>
-let visits = localStorage.getItem("visits") || 0;
-visits = parseInt(visits) + 1;
+
+const FORGET_TIME = 1000 * 60 * 60 * 6;
+
+let now = Date.now();
+let lastVisit = localStorage.getItem("lastVisit");
+let visits = localStorage.getItem("visits");
+
+if (!lastVisit || now - lastVisit > FORGET_TIME) {
+    visits = 0;
+} else {
+    visits = parseInt(visits || 0);
+}
+
+visits += 1;
+
 localStorage.setItem("visits", visits);
+localStorage.setItem("lastVisit", now);
 
 const messages = [
   "what are you looking for?",
   "you've been here before.",
   "still looking?",
   "no new messages.",
-  "the conversation ended."
+  "the conversation ended.",
+  "i don’t remember you."
 ];
 
-const text = messages[Math.min(visits - 1, messages.length - 1)];
+let text = messages[Math.min(visits - 1, messages.length - 1)];
 
 let i = 0;
-const speed = 60; // скорость печати
+const speed = 55;
 
-function typeWriter() {
+function type() {
   if (i < text.length) {
-    document.getElementById("text").innerHTML += text.charAt(i);
+    document.getElementById("text").innerHTML += text[i];
     i++;
-    setTimeout(typeWriter, speed);
+    setTimeout(type, speed);
+  } else {
+    document.getElementById("text").innerHTML += "<span class='cursor'>_</span>";
   }
 }
 
-typeWriter();
+function setFavicon(icon) {
+    const canvas = document.createElement("canvas");
+    canvas.width = 64;
+    canvas.height = 64;
+    const ctx = canvas.getContext("2d");
+
+    ctx.fillStyle = "black";
+    ctx.fillRect(0, 0, 64, 64);
+
+    ctx.fillStyle = "white";
+    ctx.font = "40px monospace";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(icon, 32, 32);
+
+    const link = document.getElementById("favicon");
+    link.href = canvas.toDataURL("image/png");
+}
+
+const icons = [
+    "?",
+    "👁",
+    "🔇",
+    "✉️",
+    "⛓"
+];
+
+setFavicon(icons[Math.min(visits - 1, icons.length - 1)]);
+
+type();
 </script>
 
 </body>
