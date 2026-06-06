@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>socialgrave</title>
+<style>
+body {
+  margin: 0;
+  background: black;
+  color: white;
+  font-family: monospace;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  text-align: center;
+}
+</style>
+</head>
+<body>
+
+<div id="text">what are you looking for?</div>
+
+<script>
+let visits = localStorage.getItem("visits") || 0;
+visits = parseInt(visits) + 1;
+localStorage.setItem("visits", visits);
+
+const texts = [
+  "what are you looking for?",
+  "you've been here before.",
+  "still looking?",
+  "no new messages.",
+  "the conversation ended."
+];
+
+document.getElementById("text").innerText =
+texts[Math.min(visits - 1, texts.length - 1)];
+</script>
+
+</body>
+</html>
