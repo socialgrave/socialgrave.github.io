@@ -4,8 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link id="favicon" rel="icon">
-
 <title>socialgrave</title>
 
 <style>
@@ -88,35 +86,6 @@ function type() {
     document.getElementById("text").innerHTML += "<span class='cursor'>_</span>";
   }
 }
-
-function setFavicon(icon) {
-    const canvas = document.createElement("canvas");
-    canvas.width = 64;
-    canvas.height = 64;
-    const ctx = canvas.getContext("2d");
-
-    ctx.fillStyle = "black";
-    ctx.fillRect(0, 0, 64, 64);
-
-    ctx.fillStyle = "white";
-    ctx.font = "40px monospace";
-    ctx.textAlign = "center";
-    ctx.textBaseline = "middle";
-    ctx.fillText(icon, 32, 32);
-
-    const link = document.getElementById("favicon");
-    link.href = canvas.toDataURL("image/png");
-}
-
-const icons = [
-    "?",
-    "👁",
-    "🔇",
-    "✉️",
-    "⛓"
-];
-
-setFavicon(icons[Math.min(visits - 1, icons.length - 1)]);
 
 type();
 </script>
