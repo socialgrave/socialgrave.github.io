@@ -3,49 +3,155 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>socialgrave</title>
+<title>unsonsy // archive</title>
 
 <style>
-body {
-  margin: 0;
-  background: black;
-  color: white;
+  /* Импортируем дорогой моноширинный шрифт */
+  @import url('https://googleapis.com');
 
-  font-family: monospace;
+  * {
+    box-sizing: border-box;
+  }
 
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  overflow: hidden;
-  text-align: center;
-}
+  body {
+    margin: 0;
+    background-color: #000000;
+    color: #ffffff;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 300;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+  }
 
-#text {
-  font-size: clamp(24px, 4vw, 56px);
-  max-width: 90%;
-  letter-spacing: 1px;
-  white-space: pre-wrap;
-}
+  /* Эффект шума/зернистости на фоне в стиле твоей аватарки */
+  body::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://w3.org width='100%25' height='100%25' fill='none'/%3e%3cfilter id='noise'%3e%3cfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3e%3c/filter%3e%3crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3e%3c/svg%3e");
+    pointer-events: none;
+    z-index: 10;
+  }
 
-.cursor {
-  display: inline-block;
-  animation: blink 0.8s infinite;
-}
+  /* Сканирующие полосы старого монитора (едва заметные) */
+  .scanlines {
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%);
+    background-size: 100% 4px;
+    z-index: 11;
+    pointer-events: none;
+  }
 
-@keyframes blink {
-  50% { opacity: 0; }
-}
+  .container {
+    max-width: 600px;
+    width: 90%;
+    text-align: left; /* Терминальное выравнивание по левому краю выглядит дороже */
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    z-index: 5;
+  }
+
+  .header {
+    font-size: 14px;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    color: #ffffff;
+    opacity: 0.9;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: 15px;
+  }
+
+  .status {
+    font-size: 11px;
+    color: #888888;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  /* Белая пульсирующая точка системы */
+  .status::before {
+    content: "";
+    display: inline-block;
+    width: 4px;
+    height: 4px;
+    background-color: #ffffff;
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  #text {
+    font-size: 18px;
+    line-height: 1.6;
+    letter-spacing: 0.5px;
+    color: #e0e0e0;
+    min-height: 60px;
+    white-space: pre-wrap;
+  }
+
+  .cursor {
+    display: inline-block;
+    font-weight: 400;
+    animation: blink 0.8s infinite;
+    color: #ffffff;
+  }
+
+  /* Блок со ссылками, которые появляются плавно */
+  .links {
+    display: flex;
+    gap: 20px;
+    margin-top: 10px;
+    opacity: 0;
+    animation: fadeIn 1s forwards;
+    animation-delay: 1.5s; /* Появляются после того, как напечатается текст */
+  }
+
+  .links a {
+    color: #888888;
+    text-decoration: none;
+    font-size: 12px;
+    letter-spacing: 1px;
+    transition: color 0.3s ease;
+  }
+
+  .links a:hover {
+    color: #ffffff;
+  }
+
+  @keyframes blink { 50% { opacity: 0; } }
+  @keyframes pulse { 0%, 100% { opacity: 0.3; } 50% { opacity: 1; } }
+  @keyframes fadeIn { to { opacity: 1; } }
 </style>
 </head>
-
 <body>
 
-<div id="text"></div>
+<div class="scanlines"></div>
+
+<div class="container">
+  <!-- Главный бренд сверху -->
+  <div class="header">u n s o n s y</div>
+  
+  <!-- Системный статус -->
+  <div class="status">system_online // archive_loaded</div>
+  
+  <!-- Твой интерактивный текст -->
+  <div id="text"></div>
+  
+  <!-- Аккуратные ссылки на твои ресурсы -->
+  <div class="links">
+    <a href="https://t.me/unsonsy" target="_blank">[telegram]</a>
+    <a href="https://t.me/bloodkiller2011" target="_blank">[channel]</a>
+  </div>
+</div>
 
 <script>
-
 const FORGET_TIME = 1000 * 60 * 60 * 6;
 
 let now = Date.now();
